@@ -28,7 +28,7 @@ job('NodeJS Docker example') {
                sleep 5 
                url=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' nodejs-app)
                curl http://$url:3000
-              """)
+        """)
         shell("echo -n Cleaning provisioned docker images")
         shell("docker stop nodejs-app && docker rm nodejs-app")
     }
