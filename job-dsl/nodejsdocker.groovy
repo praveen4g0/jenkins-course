@@ -32,7 +32,9 @@ job('NodeJS Docker example') {
 //         shell("echo -n Cleaning provisioned docker images")
 //         shell("docker stop nodejs-app && docker rm nodejs-app")
     }
-    script('''
+    
+    steps {
+       shell '''
             #!/usr/bin/env bash
             set -u -o pipefail
 
@@ -51,5 +53,7 @@ job('NodeJS Docker example') {
             sleep 5s
 
             curl http://$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' nodejs-app):3000
-        ''')
+       '''
+    }
+    
 }
