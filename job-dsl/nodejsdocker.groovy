@@ -22,5 +22,11 @@ job('NodeJS Docker example') {
             createFingerprints(false)
             skipDecorate()
         }
+        shell("echo -n Testing published image")
+        shell("docker run -d -p 3000:3000 --name nodejs-app praveen4g0/demo-docker-app:v0.0.1")
+        shell("sleep 5")
+        shell("curl http://$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' nodejs-app):3000")
+        shell("echo -n Cleaning provisioned docker images")
+        shell("docker stop nodejs-app && docker rm nodejs-app")
     }
 }
