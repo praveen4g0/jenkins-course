@@ -35,24 +35,23 @@ job('NodeJS Docker example') {
     
     steps {
        shell '''
-            #!/usr/bin/env bash
-            set -u -o pipefail
+       #!/usr/bin/env bash
+       set -u -o pipefail
 
-            clean() {
-              echo "Exiting Running container.."
-              docker stop nodejs-app
+       clean() {
+          echo "Exiting Running container.."
+          docker stop nodejs-app
 
-              docker rm nodejs-app
+          docker rm nodejs-app
+       }
+       trap clean EXIT
 
-            }
-            trap clean EXIT
+       echo "Testing published image"
+       docker run -d -p 3000:3000 --name nodejs-app praveen4g0/demo-docker-app:v0.0.1
 
-            echo "Testing published image"
-            docker run -d -p 3000:3000 --name nodejs-app praveen4g0/demo-docker-app:v0.0.1
+       sleep 5s
 
-            sleep 5s
-
-            curl http://$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' nodejs-app):3000
+       curl http://$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' nodejs-app):3000
        '''
     }
     
