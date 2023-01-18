@@ -22,14 +22,34 @@ job('NodeJS Docker example') {
             createFingerprints(false)
             skipDecorate()
         }
-        shell("echo -n Testing published image")
-        shell("docker run -d -p 3000:3000 --name nodejs-app praveen4g0/demo-docker-app:v0.0.1")
-        shell("""
-               sleep 5 
-               url=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' nodejs-app)
-               curl http://$url:3000
-        """)
-        shell("echo -n Cleaning provisioned docker images")
-        shell("docker stop nodejs-app && docker rm nodejs-app")
+//         shell("echo -n Testing published image")
+//         shell("docker run -d -p 3000:3000 --name nodejs-app praveen4g0/demo-docker-app:v0.0.1")
+//         shell("""
+//                sleep 5 
+//                url=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' nodejs-app)
+//                curl http://$url:3000
+//         """)
+//         shell("echo -n Cleaning provisioned docker images")
+//         shell("docker stop nodejs-app && docker rm nodejs-app")
     }
+    script('''
+            #!/usr/bin/env bash
+            set -u -o pipefail
+
+            clean() {
+              echo "Exiting Running container.."
+              docker stop nodejs-app
+
+              docker rm nodejs-app
+
+            }
+            trap clean EXIT
+
+            echo "Testing published image"
+            docker run -d -p 3000:3000 --name nodejs-app praveen4g0/demo-docker-app:v0.0.1
+
+            sleep 5s
+
+            curl http://$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' nodejs-app):3000
+        ''')
 }
