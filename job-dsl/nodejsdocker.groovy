@@ -24,7 +24,7 @@ job('NodeJS Docker example') {
         }
         shell("echo -n Testing published image")
         shell("docker run -d -p 3000:3000 --name nodejs-app praveen4g0/demo-docker-app:v0.0.1")
-        shell("sleep 5 && url=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' nodejs-app")
+        shell("sleep 5 && url=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' nodejs-app)")
         shell("curl http://$url:3000")
         shell("echo -n Cleaning provisioned docker images")
         shell("docker stop nodejs-app && docker rm nodejs-app")
