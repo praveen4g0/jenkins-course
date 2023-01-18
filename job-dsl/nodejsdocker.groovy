@@ -36,7 +36,6 @@ job('NodeJS Docker example') {
     steps {
        shell '''
        #!/usr/bin/env bash
-       set -u -o pipefail
 
        clean() {
           echo "Exiting Running container.."
